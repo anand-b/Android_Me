@@ -27,6 +27,10 @@ import com.example.android.android_me.data.AndroidImageAssets;
 public class AndroidMeActivity extends AppCompatActivity {
 
 
+    public static String EXTRA_HEAD_INDEX = "headIndex";
+    public static String EXTRA_BODY_INDEX = "bodyIndex";
+    public static String EXTRA_LEG_INDEX = "legIndex";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +47,6 @@ public class AndroidMeActivity extends AppCompatActivity {
 
             // Set the list of image id's for the head fragment and set the position to the second image in the list
             headFragment.setImageIds(AndroidImageAssets.getHeads());
-            headFragment.setListIndex(1);
 
             // Add the fragment to its container using a FragmentManager and a Transaction
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -65,6 +68,11 @@ public class AndroidMeActivity extends AppCompatActivity {
             fragmentManager.beginTransaction()
                     .add(R.id.leg_container, legFragment)
                     .commit();
+            if (getIntent().getExtras() != null) {
+                headFragment.setListIndex(getIntent().getExtras().getInt(EXTRA_HEAD_INDEX, 0));
+                bodyFragment.setListIndex(getIntent().getExtras().getInt(EXTRA_BODY_INDEX, 0));
+                legFragment.setListIndex(getIntent().getExtras().getInt(EXTRA_LEG_INDEX, 0));
+            }
         }
 
     }

@@ -16,21 +16,47 @@
 
 package com.example.android.android_me.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.android.android_me.R;
+
+import static com.example.android.android_me.ui.AndroidMeActivity.EXTRA_BODY_INDEX;
+import static com.example.android.android_me.ui.AndroidMeActivity.EXTRA_HEAD_INDEX;
+import static com.example.android.android_me.ui.AndroidMeActivity.EXTRA_LEG_INDEX;
 
 // This activity is responsible for displaying the master list of all images
 // Implement the MasterListFragment callback, OnImageClickListener
 public class MainActivity extends AppCompatActivity implements MasterListFragment.OnImageClickListener{
 
+    private int headIndex = 0;
+    private int bodyIndex = 0;
+    private int legIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button b = (Button) findViewById(R.id.button_next);
+        b.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Bundle b = new Bundle();
+                b.putInt(EXTRA_HEAD_INDEX, headIndex);
+                b.putInt(EXTRA_BODY_INDEX, bodyIndex);
+                b.putInt(EXTRA_LEG_INDEX, legIndex);
+
+                Intent androidMeIntent = new Intent(MainActivity.this, AndroidMeActivity.class);
+                androidMeIntent.putExtras(b);
+                startActivity(androidMeIntent);
+            }
+        });
 
     }
 
@@ -39,12 +65,13 @@ public class MainActivity extends AppCompatActivity implements MasterListFragmen
         // Create a Toast that displays the position that was clicked
         Toast.makeText(this, "Position clicked = " + position, Toast.LENGTH_SHORT).show();
 
-        // TODO (2) Based on where a user has clicked, store the selected list index for the head, body, and leg BodyPartFragments
-
-        // TODO (3) Put this information in a Bundle and attach it to an Intent that will launch an AndroidMeActivity
-
-        // TODO (4) Get a reference to the "Next" button and launch the intent when this button is clicked
-
+        int bodyPart = position / 12;
+        int partIndex = position % 12;
+        switch (bodyPart) {
+            case 0 : headIndex = partIndex;
+            case 1 : bodyIndex = partIndex;
+            default: legIndex = partIndex;
+        }
     }
 
 }
